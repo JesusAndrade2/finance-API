@@ -1,0 +1,45 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Document
+  body(style="margin:0; padding:0;")
+    table(width="600" cellpadding="0" cellspacing="0" border="0" style=" max-width:600px;")
+      tr(style=' background-color: darkslategray')
+        td(style='border-radius: 12px 12px 0px 0px ')
+          h1(style="padding: 20px; color:aquamarine; margin-bottom:10px; text-align:left; text-shadow: 0 0 10px aqua" ) Finance App
+      tr(style='background-color: #b0af91')
+        td(style='padding: 20px;  border-radius: 0 0 12px 12px')
+          if status === 'sender' 
+            h2(style="margin-bottom:30px; font-weight:bold ; text-align: center") Transaction Aproved
+
+            p Dear #{name},
+            p We are pleased to inform you that your transaction has been succesfully approved
+            p Transaction details 
+              ul 
+                li amount: #{balance}
+                li sent by: #{id}
+                li account number from receiver: #{accountNumber}
+            hr
+            p Thank you for using App Finance 
+            p best regards
+            p The Finance App team
+          else 
+            h2(style="margin-bottom:30px; font-weight:bold ; text-align: center") Transaction received 
+
+            p Dear #{name},
+            p We are pleased to inform you that you have sccessfully received a transaction 
+            p Transaction details 
+              ul 
+                li amount: #{balance}
+                li sent by: #{id}
+                li account number from receiver: #{accountNumber}
+            hr
+            p Thank you for using App Finance 
+            p best regards
+            p The Finance App team
+
+
+
+

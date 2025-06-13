@@ -1,4 +1,8 @@
-import { encryptAdapter, JwtAdapter } from '../../../config';
+import {
+  compilatedRegisterUser,
+  encryptAdapter,
+  JwtAdapter,
+} from '../../../config';
 import { User } from '../../../data';
 import { CustomError, RegisterUserDto } from '../../../domain';
 import { EmailService } from '../../common/services/email.service';
@@ -30,34 +34,33 @@ export class RegisterUserService {
           number_account: user.account_number,
           status: user.status,
           created_at: user.created_at,
-        },
+        }
       };
     } catch (error) {
       throw CustomError.internalServerError('something went very wrong');
     }
   };
 
-  private sendLinktoEmailFromValidationAcoount = async (email: string) => {
+  private sendLinktoEmailFromValidationAcoount = async (
+    email: string,
+    name: string
+  ) => {
     const token = await JwtAdapter.generateToken({ email }, '600s');
     if (!token) throw CustomError.internalServerError('error getting token');
 
     const link = `http://www.localhost:3000/api/v1/auth/validate-account/${token}`;
     console.log(link);
 
-    const html = `
-    <h1>validate your email</h1>
-    <p>Clic on the following link to validate your email </p>
-    <a href="${link}" > Validate your email : ${email} </a>`;
+    const html = compilatedRegisterUser({ name, link });
 
     const isSent = await this.emailService.sendEmail({
       to: email,
       subject: 'validate your account',
       htmlBody: html,
     });
-
-    if (!isSent)
+    if (!isSent) {
       throw CustomError.internalServerError('something went very wrong');
-
+    }
     return true;
   };
 
@@ -108,8 +111,8 @@ export class RegisterUserService {
     user.account_number = this.generateAccountNumber();
 
     try {
+      await this.sendLinktoEmailFromValidationAcoount(data.email, data.name);
       await user.save();
-      this.sendLinktoEmailFromValidationAcoount(data.email);
       return {
         message: 'user create succesfully 👌',
       };
